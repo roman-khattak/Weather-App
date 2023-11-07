@@ -64,8 +64,11 @@ This project uses the GetX library for state management. GetX is a lightweight a
 The project uses the following main libraries:
 
 http: Used for making HTTP requests to fetch weather data from the API.
+
 GetX: Provides state management, dependency injection, and route management.
+
 Google Fonts: Used to load Google Fonts for custom text styling.
+
 Intl: To manage the DateTime.
 
 ### Contributing
