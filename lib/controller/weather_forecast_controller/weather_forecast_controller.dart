@@ -5,7 +5,8 @@ import 'package:weather_api_implementation/models/weather_data/weather_data.dart
 import '../../services/weather_api_service/weather_api_service.dart';
 
 class WeatherForecastController extends GetxController {
-  final api = WeatherApiService(); // This is the instance of the 'WeatherApiService' class, which will be used to fetch weather data from an the API by calling the fetchWeatherData(city), function.
+  final api =
+      WeatherApiService(); // This is the instance of the 'WeatherApiService' class, which will be used to fetch weather data from an the API by calling the fetchWeatherData(city), function.
   var currentDayWeatherData = <WeatherData>[].obs;
   var otherDaysWeatherData = <WeatherData>[].obs;
   var isLoading = false.obs;
@@ -20,6 +21,7 @@ class WeatherForecastController extends GetxController {
       currentDayWeatherData.value = weatherDataMap['currentDay'] ?? [];
       otherDaysWeatherData.value = weatherDataMap['otherDays'] ?? [];
     } catch (e) {
+      debugPrint('Error in WeatherForecastFetching: $e');
       if (e is Exception) {
         error.value = 'Failed to load weather data: $e';
       } else {
