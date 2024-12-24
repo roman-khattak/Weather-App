@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +18,16 @@ class WeatherForecastScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
+    Timer? debouncer;
+
+    void debounce(VoidCallback action,
+        {Duration duration = const Duration(milliseconds: 500)}) {
+      if (debouncer?.isActive ?? false) {
+        debouncer?.cancel();
+      }
+      debouncer = Timer(duration, action);
+    }
+
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -30,7 +42,9 @@ class WeatherForecastScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 10),
                 child: TextField(
                   onChanged: (city) {
-                    controller.fetchWeatherData(city);
+                    debounce(() {
+                      controller.fetchWeatherData(city);
+                    });
                   },
                   style: GoogleFonts.poppins(color: Colors.white),
                   decoration: InputDecoration(
