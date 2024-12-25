@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -56,6 +58,8 @@ class WeatherApiService {
         throw Exception(
             'Failed to load weather data: ${response.reasonPhrase}');
       }
+    } on SocketException {
+      throw Exception('No internet connection');
     } catch (e) {
       debugPrint('Error fetching weather data: $e');
       rethrow; // Re-throwing the exception to handle it in the controller

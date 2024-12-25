@@ -7,12 +7,29 @@ import 'package:intl/intl.dart';
 
 import '../controller/weather_forecast_controller/weather_forecast_controller.dart';
 import '../utils/size_config.dart';
-import '../widgets/weather_card.dart';
+import '../utils/widgets/common_widgets/custom_primary_button.dart';
+import '../utils/widgets/weather_card.dart';
 
-class WeatherForecastScreen extends StatelessWidget {
-  final WeatherForecastController controller;
+class WeatherForecastScreen extends StatefulWidget {
+  WeatherForecastScreen();
 
-  WeatherForecastScreen({required this.controller});
+  @override
+  State<WeatherForecastScreen> createState() => _WeatherForecastScreenState();
+}
+
+class _WeatherForecastScreenState extends State<WeatherForecastScreen> {
+  final controller = WeatherForecastController();
+
+  @override
+  void initState() {
+    super.initState();
+    loadLastCity();
+  }
+
+  loadLastCity() async {
+    debugPrint("initState called");
+    await controller.loadLastCity();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +58,11 @@ class WeatherForecastScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: TextField(
+                  controller: controller.textController,
                   onChanged: (city) {
                     debounce(() {
                       controller.fetchWeatherData(city);
+                      controller.saveLastCity(city);
                     });
                   },
                   style: GoogleFonts.poppins(color: Colors.white),
@@ -57,6 +76,50 @@ class WeatherForecastScreen extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                CustomPrimaryButton(
+                  height: 35,
+                  width: 130,
+                  title: "Clear",
+                  textStyle: GoogleFonts.rubik(
+                    color: Colors.white,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 13,
+                  ),
+                  borderRadius: 25,
+                  backgroundColor: Colors.blueAccent,
+                  onTap: () {
+                    controller.textController.clear(); // Clear the TextField
+                    controller.currentDayWeatherData.clear();
+                    controller.otherDaysWeatherData.clear();
+                  },
+                ),
+                CustomPrimaryButton(
+                  height: 35,
+                  width: 130,
+                  title: "Refresh",
+                  textStyle: GoogleFonts.rubik(
+                    color: Colors.white,
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 13,
+                  ),
+                  borderRadius: 25,
+                  backgroundColor: Colors.blueAccent,
+                  onTap: () {
+                    debugPrint(
+                        "controller.lastCity.value is  ${controller.lastCity.value}");
+                    controller.fetchWeatherData(controller.lastCity.value);
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             Expanded(
               child: Obx(() {
                 if (controller.isLoading.value) {
@@ -64,6 +127,13 @@ class WeatherForecastScreen extends StatelessWidget {
                       child: CircularProgressIndicator(
                     color: Colors.white,
                   ));
+                } else if (controller.error.isNotEmpty) {
+                  return Center(
+                    child: Text(
+                      controller.error.value,
+                      style: TextStyle(color: Colors.red, fontSize: 18),
+                    ),
+                  );
                 } else if (controller.currentDayWeatherData.isEmpty &&
                     controller.otherDaysWeatherData.isEmpty) {
                   return Center(

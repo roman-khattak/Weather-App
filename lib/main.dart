@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:weather_api_implementation/utils/user_shared_preferences.dart';
 import 'package:weather_api_implementation/views/weather_forecast_screen.dart';
 
 import 'controller/weather_forecast_controller/weather_forecast_controller.dart';
 
 void main() {
+  Get.put(UserSharedPreferences());
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final controller = WeatherForecastController();
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -22,9 +22,12 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           centerTitle: true,
           backgroundColor: Colors.indigo,
-          title: Text('5-Days Weather Forecast',style: GoogleFonts.montserrat(color: Colors.white),),
+          title: Text(
+            '5-Days Weather Forecast',
+            style: GoogleFonts.montserrat(color: Colors.white),
+          ),
         ),
-        body: WeatherForecastScreen(controller: controller),
+        body: WeatherForecastScreen(),
       ),
     );
   }

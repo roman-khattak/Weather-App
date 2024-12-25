@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
-import '../models/weather_data/weather_data.dart';
-import '../utils/size_config.dart';
+import '../../models/weather_data/weather_data.dart';
+import '../size_config.dart';
 
 class WeatherCard extends StatelessWidget {
   // this is the widget I extracted so that I can use it in multiple places
